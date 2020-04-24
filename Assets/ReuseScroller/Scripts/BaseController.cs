@@ -72,6 +72,7 @@ namespace ReuseScroller
             base.OnValidate();
             if (cellObject && !cellObject.GetComponent<BaseCell<T>>()) {
                 cellObject = null;
+                  Debug.LogWarning("指定的 cellTemplate 不包含BaseCell 的实现类！");
             }
         }
 
@@ -180,10 +181,14 @@ namespace ReuseScroller
         }
 
         private void FillCells() {
-            if (cells.Count == 0) CreateCell(0);
-
-            while (CellsTailEdge + spacing <= ActiveTailEdge) {
-                CreateCell(cells.Last.Value.dataIndex + 1);
+            if (cellData.Count > 0)
+            {
+                if (cells.Count == 0) CreateCell(0);
+                while (CellsTailEdge + spacing <= ActiveTailEdge)
+                {
+                    if (cells.Last.Value.dataIndex == cellData.Count - 1) break; //数据量够了
+                    CreateCell(cells.Last.Value.dataIndex + 1);
+                }
             }
         }
 
